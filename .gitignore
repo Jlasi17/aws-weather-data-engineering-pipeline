@@ -1,0 +1,39 @@
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+.aws/
+credentials
+*.pem
+*.key
+*.p12
+*.pfx
+secrets.*
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+
+# Editors / operating systems
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Logs and generated data
+*.log
+*.csv
+*.jsonl
+data/
+output/
+dist/
+build/
+
+# Infrastructure state
+.terraform/
+*.tfstate
+*.tfstate.*
