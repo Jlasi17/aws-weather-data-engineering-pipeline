@@ -1,0 +1,36 @@
+CREATE DATABASE IF NOT EXISTS weatherdb;
+USE weatherdb;
+
+CREATE TABLE IF NOT EXISTS weather_observations (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    city VARCHAR(100) NOT NULL,
+    city_id BIGINT,
+    country VARCHAR(10),
+    latitude DECIMAL(9,6),
+    longitude DECIMAL(9,6),
+    observed_at DATETIME NOT NULL,
+    ingested_at DATETIME NOT NULL,
+    temperature DECIMAL(6,2),
+    feels_like DECIMAL(6,2),
+    temp_min DECIMAL(6,2),
+    temp_max DECIMAL(6,2),
+    pressure INT,
+    humidity INT,
+    sea_level_pressure INT,
+    ground_level_pressure INT,
+    visibility INT,
+    wind_speed DECIMAL(6,2),
+    wind_direction INT,
+    wind_gust DECIMAL(6,2),
+    cloudiness INT,
+    weather_id INT,
+    weather_main VARCHAR(50),
+    weather_description VARCHAR(100),
+    weather_icon VARCHAR(20),
+    sunrise DATETIME,
+    sunset DATETIME,
+    timezone_offset INT,
+    source VARCHAR(50) DEFAULT 'openweather',
+    INDEX idx_weather_city_observed (city, observed_at),
+    INDEX idx_weather_ingested (ingested_at)
+);
