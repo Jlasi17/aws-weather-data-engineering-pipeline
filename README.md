@@ -19,7 +19,7 @@ The pipeline collects current weather observations for Hyderabad, Bengaluru, Che
 
 - `lambda/weather-api-collector/` — collects and normalizes weather data and sends it to SQS.
 - `lambda/weather-api-to-mysql/` — consumes SQS messages and inserts observations into MySQL.
-- `glue/` — incremental PostgreSQL-to-S3 extraction job.
+- `glue/weather-postgres-to-s3.py` — incremental PostgreSQL-to-S3 Bronze extraction job.\n- `glue/weather-silver-transform.py` — Silver validation, cleaning, deduplication, and partitioning job.\n- `glue/weather-gold-analytics.py` — Gold aggregation and data-quality analytics job.
 - `database/` — MySQL and PostgreSQL table definitions.
 - `athena/` — sample analytical SQL queries.
 - `.env.example` — example configuration keys with placeholder values.
@@ -34,7 +34,7 @@ The collector Lambda expects the `SQS_QUEUE_URL` and `OPENWEATHER_SECRET_NAME` e
 
 The MySQL consumer expects `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, and optionally `DB_CONNECT_TIMEOUT`. It requires the PyMySQL dependency, which is listed in `lambda/weather-api-to-mysql/requirements.txt`.
 
-The Glue job accepts `CONNECTION_NAME`, `SOURCE_TABLE`, `S3_BUCKET`, `OUTPUT_PREFIX`, and `WATERMARK_KEY` job arguments. Configure the JDBC connection, IAM permissions, and S3 locations in your own AWS environment.
+The Bronze Glue job accepts `CONNECTION_NAME`, `SOURCE_TABLE`, `S3_BUCKET`, `OUTPUT_PREFIX`, and `WATERMARK_KEY` job arguments. The Silver and Gold scripts use the `weather-data-pro` bucket paths defined near the top of each script; update `BUCKET` if deploying to a different bucket. Configure Glue job roles and S3 permissions for the input and output prefixes in your own AWS environment.
 
 ## Database and query files
 
