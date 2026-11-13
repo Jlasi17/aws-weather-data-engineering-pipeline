@@ -12,14 +12,18 @@ The pipeline collects current weather observations for Hyderabad, Bengaluru, Che
 2. The collector sends normalized records to an Amazon SQS queue.
 3. A second Lambda function consumes queue messages and inserts observations into MySQL.
 4. AWS DMS replicates the MySQL data to PostgreSQL using full load and change data capture (CDC).
-5. An AWS Glue PySpark job reads new PostgreSQL records using an ID watermark and writes Parquet files to S3.
-6. An AWS Glue Crawler updates the Data Catalog, and Athena is used to query the resulting dataset.
+5. An AWS Glue PySpark job reads new PostgreSQL records using an ID watermark and writes Bronze Parquet data to S3.
+6. A Silver Glue job validates records, removes invalid rows, deduplicates observations by ID, derives date/hour fields, and writes partitioned Parquet data.
+7. A Gold Glue job creates city-level summaries, hourly trends, daily summaries, and data-quality metrics.
+8. AWS Glue Crawlers update the Data Catalog, and Amazon Athena queries the Silver and Gold datasets.
 
 ## Repository contents
 
 - `lambda/weather-api-collector/` — collects and normalizes weather data and sends it to SQS.
 - `lambda/weather-api-to-mysql/` — consumes SQS messages and inserts observations into MySQL.
-- `glue/weather-postgres-to-s3.py` — incremental PostgreSQL-to-S3 Bronze extraction job.\n- `glue/weather-silver-transform.py` — Silver validation, cleaning, deduplication, and partitioning job.\n- `glue/weather-gold-analytics.py` — Gold aggregation and data-quality analytics job.
+- `glue/weather-postgres-to-s3.py` — incremental PostgreSQL-to-S3 Bronze extraction job.
+- `glue/weather-silver-transform.py` — Silver validation, cleaning, deduplication, and partitioning job.
+- `glue/weather-gold-analytics.py` — Gold aggregation and data-quality analytics job.
 - `database/` — MySQL and PostgreSQL table definitions.
 - `athena/` — sample analytical SQL queries.
 - `.env.example` — example configuration keys with placeholder values.
